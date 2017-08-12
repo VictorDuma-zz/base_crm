@@ -1,0 +1,122 @@
+{% extends "base_2.html" %}
+{% load static from staticfiles %}
+
+{% block menu %}
+				{% include "navbar.html" %}
+{% endblock menu %}
+
+   {% block content %}
+
+
+           <table id="table1" class="table table-bordered table-condensed table-fixedheader" >
+                   {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+
+                  <thead class="table-fixedheader">
+				  <tr>
+					  <th><a href="{% url "kvant_base" %}?order_by=id{% if order_by == 'id' and reverse != '1' %}&amp;reverse=1{% endif %}">
+									  №
+									  {% if order_by == 'id' and reverse != '1' %}&uarr;
+									  {% elif order_by == 'id' and reverse == '1' %}&darr;
+									  {% endif %} </a></th>
+					  <th>Date</th>
+					  <th><a href="{% url "kvant_base" %}?order_by=customer{% if order_by == 'customer' and reverse != '1' %}&amp;reverse=1{% endif %}">
+									  Customer
+									  {% if order_by == 'customer' and reverse != '1' %}&uarr;
+									  {% elif order_by == 'customer' and reverse == '1' %}&darr;
+									  {% endif %} </a>
+								  </th>
+					  <th>Phone</th>
+					  <th><a href="{% url "kvant_base" %}?order_by=brand{% if order_by == 'brand' and reverse != '1' %}&amp;reverse=1{% endif %}">
+									  Brand
+									  {% if order_by == 'brand' and reverse != '1' %}&uarr;
+									  {% elif order_by == 'brand' and reverse == '1' %}&darr;
+									  {% endif %} </a></th>
+					  <th>Model</th>
+                                          <th>Cost</th>
+					  <th>Serial number</th>
+					  <th><a href="{% url "kvant_base" %}?order_by=status{% if order_by == 'status' and reverse != '1' %}&amp;reverse=1{% endif %}">
+									  Status
+									  {% if order_by == 'status' and reverse != '1' %}&uarr;
+									  {% elif order_by == 'status' and reverse == '1' %}&darr;
+									  {% endif %} </a></th>
+					  <th><a href="{% url "kvant_base" %}?order_by=engineer{% if order_by == 'engineer' and reverse != '1' %}&amp;reverse=1{% endif %}">
+									  Engineer
+									  {% if order_by == 'engineer' and reverse != '1' %} &uarr;
+									  {% elif order_by == 'engineer' and reverse == '1' %} &darr;
+									  {% endif %} </a></th>
+                                          <th>Issue</th>
+					  <th>Action</th>
+					  <th>Date closing</th>
+					  <th>Warranty</th>
+                                          
+
+
+
+				  </tr>
+				  </thead>
+			      {% endwith %}
+
+
+			   <tbody >
+
+		   {% for table in tables %}
+
+		   <tr class="{{table.status}}" ondblclick="go('{% url 'edit_order' table.id %}'); return false;">
+
+			  <td>{{table.id}}</a></td>
+			  <td>{{table.date_now|date:"d.m.Y H:i"}}</td>
+			  <td>{{table.customer.contact_name}}</td>
+			  <td>{{table.customer.phone}}</td>
+			  <td>{{table.brand}}</td>
+			  <td>{{table.model_item}}</td>
+                          <td>{{table.cost_repair}}</td>
+			  <td>{{table.serial_number}}</td>
+			  <td>{{table.get_status_display}}</td>
+                          {%if table.engineer%}
+			  <td>{{table.engineer}}</td>
+                          {%else%}
+			   <td></td>
+			  {%endif%}
+                          <td>{{table.reason}}</td>
+                         
+
+			   <td><div class="dropdown"> <a class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                                                                        Action <b class="caret"></b> </a>
+               <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+				  <li><a class="btn btn-mini" href = '' role="button" onclick="go('{% url 'close_order' table.id%}'); return false;">Closing</a></li>
+				  <li><a class="btn btn-mini" href = '' role="button" onclick="go('{% url 'order_doc' table.id%}'); return false;">Print receipt</a></li>
+				  <li><a class="btn btn-mini" href = '' role="button" onclick="go('{% url 'sticker' table.id%}'); return false;">Print sticker</a></li>
+                                  <li><a class="btn btn-mini" href = '' role="button" >Print Write-off act</a></li>
+				  <li><a class="btn btn-mini" href = '' role="button" onclick="go('{% url 'hand_in' table.id%}'); return false;">Print hand in act</a></li>
+
+
+              </ul>
+                  </div>
+
+			   </td>
+			   {%if table.date_close%}
+			   <td>{{table.date_close|date:"d.m.Y H:i" }}</td>
+			   {%else%}
+			   <td></td>
+			   {%endif%}
+
+			   <td>{{table.get_is_warranty_display}}</td>
+                           
+		  </tr>
+
+			    {% endfor %}
+			   </tbody>
+
+	   </table>
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
